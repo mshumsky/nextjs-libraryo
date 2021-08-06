@@ -7,7 +7,7 @@ export default function AddBook() {
   const { push } = useRouter();
 
   const { authors, storage } = useSelector((store) => ({
-    authors: Object.keys(store.authors).map((key) => store.authors[key]),
+    authors: Object.keys(store.authors || {}).map((key) => store.authors[key]),
     storage: store.storage,
   }));
 
@@ -47,13 +47,23 @@ export default function AddBook() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { title, author_id, year, image } = values;
+    if (authors.length === 0) {
+      const answer = confirm(
+        "You need at least one author available, create a new one?"
+      );
+      if (answer) push("/authors/add");
+      return;
+    }
+
+    const { title, year, image } = values;
+    const author_id = values.author_id ? values.author_id : authors[0].id;
     const created_at = new Date().getTime();
 
     const books = storage.getStack("books");
     const id = books.insert(
       new Book(null, title, author_id, created_at, year, image)
     );
+
     push(`/books/${id}`);
   };
 

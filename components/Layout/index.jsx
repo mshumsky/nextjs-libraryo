@@ -11,6 +11,7 @@ export default function Layout({ children }) {
           <a
             className="link-primary ms-1"
             href="tg://resolve?domain=mshumsky"
+						rel="noreferrer"
             target="_blank"
           >
             @mshumsky

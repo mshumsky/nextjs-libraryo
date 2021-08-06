@@ -1,15 +1,20 @@
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {useSelector} from "react-redux";
+import Loader from "../../components/Loader";
 
 export default function Books() {
   const router = useRouter();
 
   const { authors, books, stack } = useSelector((store) => ({
-    authors: Object.keys(store.authors).map((key) => store.authors[key]),
-    books: Object.keys(store.books).map((key) => store.books[key]),
-    stack: store.storage?.getStack("books"),
+    authors: Object.keys(store.authors || {}).map((key) => store.authors[key]),
+    books: Object.keys(store.books || {}).map((key) => store.books[key]),
+    stack: store.storage?.getStack("books")
   }));
+
+	if (!authors || !books || !stack || !router) {
+		return <Loader />
+	}
 
   return (
     <div className="row">
@@ -47,6 +52,9 @@ export default function Books() {
             )}
             {books.map((book) => {
               const author = authors.find((obj) => obj.id === +book.author_id);
+							console.log('book: ', book);
+							console.log('author: ', author);
+							console.log('authors: ', authors);
               const authorResult = author
                 ? `${author.first_name} ${author.last_name}`
                 : "DELETED";

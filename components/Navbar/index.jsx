@@ -1,13 +1,14 @@
 import NavLink from "../NavLink";
+import Link from "next/link";
 
 export default function Navbar() {
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container">
-          <a className="navbar-brand" href="/">
-            Library.O
-          </a>
+          <Link href="/">
+						<a className="navbar-brand">Library.O</a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"

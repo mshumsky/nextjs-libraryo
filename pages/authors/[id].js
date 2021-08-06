@@ -1,6 +1,6 @@
-import {useRouter} from "next/router";
-import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 
 export default function Author() {
@@ -10,7 +10,7 @@ export default function Author() {
   } = useRouter();
 
   const { author, stack } = useSelector((store) => ({
-    author: store.authors[id],
+    author: typeof window !== "undefined" ? store.authors[id] : false,
     stack: store.storage?.getStack("authors"),
   }));
 
@@ -40,14 +40,16 @@ export default function Author() {
     storageAuthor.update(values);
   };
 
-  if (!id || !author) {
+  if (!id || (!author && typeof window !== "undefined")) {
     id && !author && push("/");
     return <Loader />;
   }
 
   const valuesEqualAuthor =
-    values.first_name === author.first_name &&
-    values.last_name === author.last_name;
+    typeof window === "undefined"
+      ? false
+      : values.first_name === author.first_name &&
+        values.last_name === author.last_name;
 
   return (
     <div className="row">
@@ -61,7 +63,7 @@ export default function Author() {
             type="text"
             className="form-control"
             id="author_id"
-            value={author.id}
+            value={author?.id || 0}
             disabled
           />
         </div>
@@ -74,7 +76,7 @@ export default function Author() {
             className="form-control"
             id="first_name"
             name="first_name"
-            value={values.first_name}
+            value={values?.first_name || ""}
             onChange={handleChange}
             pattern="^[A-ZА-Я][А-ЯA-Za-zа-я]+$"
             minLength={3}
@@ -90,7 +92,7 @@ export default function Author() {
             className="form-control"
             id="last_name"
             name="last_name"
-            value={values.last_name}
+            value={values?.last_name || ""}
             onChange={handleChange}
             pattern="^[A-ZА-Я][А-ЯA-Za-zа-я]+$"
             minLength={3}

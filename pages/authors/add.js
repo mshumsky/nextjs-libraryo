@@ -36,7 +36,7 @@ export default function AddAuthor() {
       <form className="col" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="first_name" className="form-label">
-            Author's name
+            Author&#39;s name
           </label>
           <input
             type="text"
@@ -56,7 +56,7 @@ export default function AddAuthor() {
         </div>
         <div className="mb-3">
           <label htmlFor="last_name" className="form-label">
-            Author's last name
+            Author&#39;s last name
           </label>
           <input
             type="text"

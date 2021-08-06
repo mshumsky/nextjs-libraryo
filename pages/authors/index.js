@@ -6,7 +6,7 @@ export default function Authors() {
   const router = useRouter();
 
   const { authors, stack } = useSelector((store) => ({
-    authors: Object.keys(store.authors).map((key) => store.authors[key]),
+    authors: Object.keys(store.authors || {}).map((key) => store.authors[key]),
     stack: store.storage?.getStack("authors"),
   }));
 
@@ -81,7 +81,7 @@ export default function Authors() {
         `}</style>
       </div>
       <div className="col-12 mt-3">
-        <Link href="/authors/add">
+        <Link passHref={false} href="/authors/add">
           <button className="btn btn-primary">Add author</button>
         </Link>
       </div>

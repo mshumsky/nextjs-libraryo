@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
@@ -10,8 +11,8 @@ export default function Book() {
   } = useRouter();
 
   const { authors, book, stack } = useSelector((store) => ({
-    authors: Object.keys(store.authors).map((key) => store.authors[key]),
-    book: store.books[id],
+    authors: Object.keys(store.authors || {}).map((key) => store.authors[key]),
+    book: typeof window !== "undefined" ? store.books[id] : false,
     stack: store.storage?.getStack("books"),
   }));
 
@@ -66,16 +67,18 @@ export default function Book() {
     storageBook.update(values);
   };
 
-  if (!id || !book) {
+  if (!id || (!book && typeof window !== "undefined")) {
     id && !book && push("/");
     return <Loader />;
   }
 
   const valuesEqualBook =
-    values.title === book.title &&
-    values.image === book.image &&
-    values.author_id === book.author_id &&
-    values.year === book.year;
+    typeof window === "undefined"
+      ? false
+      : values.title === book.title &&
+        values.image === book.image &&
+        values.author_id === book.author_id &&
+        values.year === book.year;
 
   return (
     <div className="row">
@@ -95,13 +98,17 @@ export default function Book() {
         </div>
         <div className="input-group mb-3">
           <span className="input-group-text align-self-start">Cover</span>
-          <img
-            src={
-              values.image ||
-              "https://via.placeholder.com/125x125?text=No+Cover"
-            }
-            className="img-thumbnail"
-          />
+          <div className="d-flex img-thumbnail">
+            <Image
+              src={
+                values.image ||
+                "https://via.placeholder.com/125x125?text=No+Cover"
+              }
+              width={125}
+              height={125}
+              objectFit="contain"
+            />
+          </div>
           <div className="d-flex flex-column align-items-baseline ms-1">
             <input
               className="form-control align-self-end"
@@ -121,13 +128,6 @@ export default function Book() {
               </button>
             )}
           </div>
-          <style jsx>{`
-            img {
-              width: 125px;
-              height: 125px;
-              object-fit: contain;
-            }
-          `}</style>
         </div>
         <div className="input-group mb-3">
           <label htmlFor="title" className="input-group-text">
