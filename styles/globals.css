@@ -14,3 +14,15 @@ a {
 * {
   box-sizing: border-box;
 }
+
+main {
+  min-height: calc(100vh - 112px);
+}
+
+footer {
+  height: 56px;
+}
+
+.link-primary {
+  text-decoration: none;
+}
